@@ -1,6 +1,5 @@
-addCommandHandler("respawn",function()
+addCommandHandler("respawn", function()
     local Player = getPlayerName(localPlayer)
-    
-    setElementPosition(localPlayer,0,8,0)
-    outputChatBox(Player.." successfully respawned")
+    setElementPosition(localPlayer, 1, 5, 0)
+    outputChatBox(Player .. " successfully respawned")
 end)
