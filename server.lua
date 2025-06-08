@@ -49,3 +49,17 @@ addEventHandler("onPlayerQuit", root, function()
         outputDebugString("Failed to update data for player: " .. name)
     end
 end)
+
+
+
+addEvent("onPlayerRespawnRequest", true)
+addEventHandler("onPlayerRespawnRequest", root, function()
+    -- Move the player
+    setElementPosition(source, 0, 0, 5)
+
+    -- Give money safely
+    givePlayerMoney(source, 1500)
+
+    -- Output to the player
+    outputChatBox(getPlayerName(source) .. " successfully respawned and got $1500", source, 0, 255, 0)
+end)
