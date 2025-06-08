@@ -1,6 +1,6 @@
 addCommandHandler("respawn",function()
     local Player = getPlayerName(localPlayer)
-    local x,y,z = getElementPosition(localPlayer)
-    setElementPosition(localPlayer,x+(math.random(-100,100)), y+(math.random(-100,100)), z)
+    
+    setElementPosition(localPlayer,0,8,0)
     outputChatBox(Player.." successfully respawned")
 end)
