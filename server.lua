@@ -1,7 +1,8 @@
 addEventHandler("onPlayerJoin", root, function()
     local db = exports.db:getConnection()
     local name = getPlayerName(source)
-    local qh = dbQuery(db, "SELECT * FROM player WHERE name = ?", name)
+    local qh = dbQuery(db, "SELECT * FROM Player WHERE name = ?", name)
+    dbFree(qh)
     local result = dbPoll(qh, -1)
     if result and #result > 0 then
         local player = result[1]
@@ -10,16 +11,17 @@ addEventHandler("onPlayerJoin", root, function()
         spawnPlayer(source, player.x, player.y, player.z, rotation, player.skin, player.interior, player.dimension)
     else
         spawnPlayer(source, 0, 0, 5, 0)
-        local skin = math.random(0, 288)
+        local skin = math.random(1, 288)
         setElementModel(source, skin)
         local x, y, z = getElementPosition(source)
         local rx, ry, rz = getElementRotation(source)
         local interior = getElementInterior(source)
         local dimension = getElementDimension(source)
+        local moneyplayer = getPlayerMoney(source)
         dbExec(db, "INSERT INTO player(name,skin,x,y,z,rotation,interior,dimension,money) VALUES(?,?,?,?,?,?,?,?,?)",
             name, skin,
             x, y, z, rz,
-            interior, dimension, 0)
+            interior, dimension, moneyplayer)
     end
     fadeCamera(source, true)
     setCameraTarget(source, source)
@@ -58,8 +60,8 @@ addEventHandler("onPlayerRespawnRequest", root, function()
     local db = exports.db:getConnection()
     setElementPosition(source, 0, 0, 5)
     local moneyplayer = getPlayerMoney(source)
+    local name = getPlayerName(source)
     givePlayerMoney(source, 1500)
-
-    outputChatBox(getPlayerName(source) .. " successfully respawned and got $1500", source, 0, 255, 0)
-    dbExec(db, "UPDATE player set money = ?", moneyplayer + 1500)
+    outputChatBox(getPlayerName(source) .. " successfully respawned and got $1500", source, 100, 255, 100)
+    dbExec(db, "UPDATE player set money = ? WHERE name = ?", moneyplayer + 1500, name)
 end)
