@@ -16,9 +16,10 @@ addEventHandler("onPlayerJoin", root, function()
         local rx, ry, rz = getElementRotation(source)
         local interior = getElementInterior(source)
         local dimension = getElementDimension(source)
-        dbExec(db, "INSERT INTO player(name,skin,x,y,z,rotation,interior,dimension) VALUES(?,?,?,?,?,?,?,?)", name, skin,
+        dbExec(db, "INSERT INTO player(name,skin,x,y,z,rotation,interior,dimension,money) VALUES(?,?,?,?,?,?,?,?,?)",
+            name, skin,
             x, y, z, rz,
-            interior, dimension)
+            interior, dimension, 0)
     end
     fadeCamera(source, true)
     setCameraTarget(source, source)
@@ -54,12 +55,11 @@ end)
 
 addEvent("onPlayerRespawnRequest", true)
 addEventHandler("onPlayerRespawnRequest", root, function()
-    -- Move the player
+    local db = exports.db:getConnection()
     setElementPosition(source, 0, 0, 5)
-
-    -- Give money safely
+    local moneyplayer = getPlayerMoney(source)
     givePlayerMoney(source, 1500)
 
-    -- Output to the player
     outputChatBox(getPlayerName(source) .. " successfully respawned and got $1500", source, 0, 255, 0)
+    dbExec(db, "UPDATE player set money = ?", moneyplayer + 1500)
 end)
